@@ -35,3 +35,7 @@ cache
 
 # IDE
 /.idea/
+
+# Test output
+/tests/.bin/updraft.wasm
+/tests/.latest.json
