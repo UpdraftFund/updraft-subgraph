@@ -1,0 +1,45 @@
+type IdeaCreated @entity(immutable: true) {
+  id: Bytes!
+  idea: Bytes! # address
+  creator: Bytes! # address
+  contributorFee: BigInt! # uint256
+  contribution: BigInt! # uint256
+  data: Bytes! # bytes
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ProfileUpdated @entity(immutable: true) {
+  id: Bytes!
+  owner: Bytes! # address
+  data: Bytes! # bytes
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SolutionCreated @entity(immutable: true) {
+  id: Bytes!
+  solution: Bytes! # address
+  creator: Bytes! # address
+  idea: Bytes! # address
+  fundingToken: Bytes! # address
+  stake: BigInt! # uint256
+  goal: BigInt! # uint256
+  deadline: BigInt! # uint256
+  contributorFee: BigInt! # uint256
+  data: Bytes! # bytes
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
