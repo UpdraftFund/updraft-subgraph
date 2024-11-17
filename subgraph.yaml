@@ -30,6 +30,36 @@ dataSources:
           handler: handleOwnershipTransferred
         - event: ProfileUpdated(indexed address,bytes)
           handler: handleProfileUpdated
-        - event: SolutionCreated(indexed address,indexed address,indexed address,address,uint256,uint256,uint256,uint256,bytes)
+        - event: SolutionCreated(indexed address,indexed address,indexed
+            address,address,uint256,uint256,uint256,uint256,bytes)
           handler: handleSolutionCreated
       file: ./src/updraft.ts
+  - kind: ethereum
+    name: Idea
+    network: arbitrum-sepolia
+    source:
+      address: "0xd68a68De44AE64f8703854F16987D48FF9ff4160"
+      abi: Idea
+      startBlock: 98089053
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Contributed
+        - PositionTransferred
+        - Split
+        - Withdrew
+      abis:
+        - name: Idea
+          file: ./abis/Idea.json
+      eventHandlers:
+        - event: Contributed(indexed address,uint256,uint256,uint256)
+          handler: handleContributed
+        - event: PositionTransferred(indexed address,indexed address,uint256,uint256)
+          handler: handlePositionTransferred
+        - event: Split(indexed address,uint256,uint256,uint256,uint256)
+          handler: handleSplit
+        - event: Withdrew(indexed address,uint256,uint256,uint256,uint256)
+          handler: handleWithdrew
+      file: ./src/idea.ts

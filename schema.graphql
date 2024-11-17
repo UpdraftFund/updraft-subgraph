@@ -43,3 +43,48 @@ type SolutionCreated @entity(immutable: true) {
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
+type Contributed @entity(immutable: true) {
+  id: Bytes!
+  addr: Bytes! # address
+  positionIndex: BigInt! # uint256
+  amount: BigInt! # uint256
+  totalShares: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PositionTransferred @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! # address
+  recipient: Bytes! # address
+  senderPositionIndex: BigInt! # uint256
+  recipientPositionIndex: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Split @entity(immutable: true) {
+  id: Bytes!
+  addr: Bytes! # address
+  originalPositionIndex: BigInt! # uint256
+  numNewPositions: BigInt! # uint256
+  firstNewPositionIndex: BigInt! # uint256
+  amountPerNewPosition: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Withdrew @entity(immutable: true) {
+  id: Bytes!
+  addr: Bytes! # address
+  positionIndex: BigInt! # uint256
+  amount: BigInt! # uint256
+  shares: BigInt! # uint256
+  totalShares: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

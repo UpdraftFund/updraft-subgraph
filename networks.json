@@ -3,6 +3,10 @@
     "Updraft": {
       "address": "0x9c8cf8e94036ce4eb2dfcc4935fa8db3470537c8",
       "startBlock": 97790710
+    },
+    "Idea": {
+      "address": "0xd68a68De44AE64f8703854F16987D48FF9ff4160",
+      "startBlock": 98089053
     }
   }
 }
