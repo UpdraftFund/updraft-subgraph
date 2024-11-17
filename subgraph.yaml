@@ -63,3 +63,53 @@ dataSources:
         - event: Withdrew(indexed address,uint256,uint256,uint256,uint256)
           handler: handleWithdrew
       file: ./src/idea.ts
+  - kind: ethereum
+    name: Solution
+    network: arbitrum-sepolia
+    source:
+      address: "0xeDCF0fdCD08D6Bd09183F82aE7988C02ebd7F8CF"
+      abi: Solution
+      startBlock: 98113803
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - SolutionContributed
+        - FeesCollected
+        - FundsWithdrawn
+        - GoalExtended
+        - SolutionOwnershipTransferred
+        - SolutionPositionTransferred
+        - Refunded
+        - SolutionUpdated
+        - SolutionSplit
+        - StakeAdded
+        - StakeRemoved
+      abis:
+        - name: Solution
+          file: ./abis/Solution.json
+      eventHandlers:
+        - event: Contributed(indexed address,uint256,uint256,uint256,uint256)
+          handler: handleContributed
+        - event: FeesCollected(indexed address,uint256,uint256)
+          handler: handleFeesCollected
+        - event: FundsWithdrawn(address,uint256)
+          handler: handleFundsWithdrawn
+        - event: GoalExtended(uint256,uint256)
+          handler: handleGoalExtended
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: PositionTransferred(indexed address,indexed address,uint256,uint256)
+          handler: handlePositionTransferred
+        - event: Refunded(indexed address,uint256,uint256)
+          handler: handleRefunded
+        - event: SolutionUpdated(bytes)
+          handler: handleSolutionUpdated
+        - event: Split(indexed address,uint256,uint256,uint256,uint256)
+          handler: handleSplit
+        - event: StakeAdded(indexed address,uint256,uint256)
+          handler: handleStakeAdded
+        - event: StakeRemoved(indexed address,uint256,uint256)
+          handler: handleStakeRemoved
+      file: ./src/solution.ts

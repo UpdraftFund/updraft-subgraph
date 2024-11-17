@@ -88,3 +88,112 @@ type Withdrew @entity(immutable: true) {
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
+type SolutionContributed @entity(immutable: true) {
+  id: Bytes!
+  addr: Bytes! # address
+  positionIndex: BigInt! # uint256
+  amount: BigInt! # uint256
+  totalTokensContributed: BigInt! # uint256
+  totalShares: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type FeesCollected @entity(immutable: true) {
+  id: Bytes!
+  addr: Bytes! # address
+  positionIndex: BigInt! # uint256
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type FundsWithdrawn @entity(immutable: true) {
+  id: Bytes!
+  to: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GoalExtended @entity(immutable: true) {
+  id: Bytes!
+  goal: BigInt! # uint256
+  deadline: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SolutionOwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SolutionPositionTransferred @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! # address
+  recipient: Bytes! # address
+  senderPositionIndex: BigInt! # uint256
+  recipientPositionIndex: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Refunded @entity(immutable: true) {
+  id: Bytes!
+  addr: Bytes! # address
+  amount: BigInt! # uint256
+  stakeAwarded: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SolutionUpdated @entity(immutable: true) {
+  id: Bytes!
+  data: Bytes! # bytes
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SolutionSplit @entity(immutable: true) {
+  id: Bytes!
+  addr: Bytes! # address
+  originalPositionIndex: BigInt! # uint256
+  numNewPositions: BigInt! # uint256
+  firstNewPositionIndex: BigInt! # uint256
+  amountPerNewPosition: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type StakeAdded @entity(immutable: true) {
+  id: Bytes!
+  addr: Bytes! # address
+  amount: BigInt! # uint256
+  totalStake: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type StakeRemoved @entity(immutable: true) {
+  id: Bytes!
+  addr: Bytes! # address
+  amount: BigInt! # uint256
+  totalStake: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
