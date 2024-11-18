@@ -11,7 +11,8 @@ import {
   SolutionUpdated,
   Split,
   StakeAdded,
-  StakeRemoved
+  StakeRemoved,
+  StakeTransferred
 } from "../generated/Solution/Solution"
 
 export function createContributedEvent(
@@ -299,4 +300,26 @@ export function createStakeRemovedEvent(
   )
 
   return stakeRemovedEvent
+}
+
+export function createStakeTransferredEvent(
+  from: Address,
+  to: Address,
+  amount: BigInt
+): StakeTransferred {
+  let stakeTransferredEvent = changetype<StakeTransferred>(newMockEvent())
+
+  stakeTransferredEvent.parameters = new Array()
+
+  stakeTransferredEvent.parameters.push(
+    new ethereum.EventParam("from", ethereum.Value.fromAddress(from))
+  )
+  stakeTransferredEvent.parameters.push(
+    new ethereum.EventParam("to", ethereum.Value.fromAddress(to))
+  )
+  stakeTransferredEvent.parameters.push(
+    new ethereum.EventParam("amount", ethereum.Value.fromUnsignedBigInt(amount))
+  )
+
+  return stakeTransferredEvent
 }

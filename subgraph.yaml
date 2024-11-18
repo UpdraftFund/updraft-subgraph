@@ -67,9 +67,9 @@ dataSources:
     name: Solution
     network: arbitrum-sepolia
     source:
-      address: "0xeDCF0fdCD08D6Bd09183F82aE7988C02ebd7F8CF"
+      address: "0x0dC42C1168428c41332DB16aAecfB063e36B14Da"
       abi: Solution
-      startBlock: 98113803
+      startBlock: 98317152
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -86,6 +86,7 @@ dataSources:
         - SolutionSplit
         - StakeAdded
         - StakeRemoved
+        - StakeTransferred
       abis:
         - name: Solution
           file: ./abis/Solution.json
@@ -112,4 +113,6 @@ dataSources:
           handler: handleStakeAdded
         - event: StakeRemoved(indexed address,uint256,uint256)
           handler: handleStakeRemoved
+        - event: StakeTransferred(indexed address,indexed address,uint256)
+          handler: handleStakeTransferred
       file: ./src/solution.ts
