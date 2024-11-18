@@ -11,9 +11,9 @@ import {
   StakeAdded as StakeAddedEvent,
   StakeRemoved as StakeRemovedEvent,
   StakeTransferred as StakeTransferredEvent,
-} from "../generated/Solution/Solution"
+} from "../generated/templates/Solution/Solution"
 import {
-  Contributed,
+  SolutionContributed,
   FeesCollected,
   FundsWithdrawn,
   GoalExtended,
@@ -28,7 +28,7 @@ import {
 } from "../generated/schema"
 
 export function handleContributed(event: ContributedEvent): void {
-  let entity = new Contributed(
+  let entity = new SolutionContributed(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.addr = event.params.addr

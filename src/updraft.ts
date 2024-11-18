@@ -10,6 +10,10 @@ import {
   ProfileUpdated,
   SolutionCreated
 } from "../generated/schema"
+import {
+  Idea,
+  Solution
+} from '../generated/templates'
 
 export function handleIdeaCreated(event: IdeaCreatedEvent): void {
   let entity = new IdeaCreated(
@@ -26,6 +30,8 @@ export function handleIdeaCreated(event: IdeaCreatedEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  Idea.create(event.params.idea);
 }
 
 export function handleOwnershipTransferred(
@@ -77,4 +83,6 @@ export function handleSolutionCreated(event: SolutionCreatedEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  Solution.create(event.params.solution);
 }

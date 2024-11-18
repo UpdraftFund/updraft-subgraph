@@ -3,7 +3,7 @@ import {
   PositionTransferred as PositionTransferredEvent,
   Split as SplitEvent,
   Withdrew as WithdrewEvent,
-} from "../generated/Idea/Idea"
+} from "../generated/templates/Idea/Idea"
 import {
   Contributed,
   PositionTransferred,
