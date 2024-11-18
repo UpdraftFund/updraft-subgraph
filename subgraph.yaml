@@ -38,9 +38,7 @@ dataSources:
     name: Idea
     network: arbitrum-sepolia
     source:
-      address: "0xd68a68De44AE64f8703854F16987D48FF9ff4160"
       abi: Idea
-      startBlock: 98089053
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -67,9 +65,7 @@ dataSources:
     name: Solution
     network: arbitrum-sepolia
     source:
-      address: "0x0dC42C1168428c41332DB16aAecfB063e36B14Da"
       abi: Solution
-      startBlock: 98317152
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
