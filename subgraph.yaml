@@ -35,7 +35,8 @@ dataSources:
           handler: handleSolutionCreated
       file: ./src/updraft.ts
 templates:
-  - name: Idea
+  - kind: ethereum
+    name: Idea
     network: arbitrum-sepolia
     source:
       abi: Idea
@@ -61,7 +62,8 @@ templates:
         - event: Withdrew(indexed address,uint256,uint256,uint256,uint256)
           handler: handleWithdrew
       file: ./src/idea.ts
-  - name: Solution
+  - kind: ethereum
+    name: Solution
     network: arbitrum-sepolia
     source:
       abi: Solution
