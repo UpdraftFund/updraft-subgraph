@@ -8,7 +8,7 @@ import {
   IdeaCreated,
   OwnershipTransferred,
   SolutionCreated,
-  Profile
+  User
 } from "../generated/schema"
 import {
   Idea,
@@ -51,9 +51,9 @@ export function handleOwnershipTransferred(
 }
 
 export function handleProfileUpdated(event: ProfileUpdatedEvent): void {
-  let profile = new Profile(event.params.owner);
-  profile.data = event.params.data;
-  profile.save()
+  let user = new User(event.params.owner);
+  user.profile = event.params.data;
+  user.save()
 }
 
 export function handleSolutionCreated(event: SolutionCreatedEvent): void {

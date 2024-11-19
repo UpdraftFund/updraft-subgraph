@@ -1,3 +1,5 @@
+import { crypto, BigInt, Bytes } from "@graphprotocol/graph-ts";
+
 import {
   Contributed as ContributedEvent,
   FeesCollected as FeesCollectedEvent,
@@ -8,8 +10,7 @@ import {
   Refunded as RefundedEvent,
   SolutionUpdated as SolutionUpdatedEvent,
   Split as SplitEvent,
-  StakeAdded as StakeAddedEvent,
-  StakeRemoved as StakeRemovedEvent,
+  StakeUpdated as StakeUpdatedEvent,
   StakeTransferred as StakeTransferredEvent,
 } from "../generated/templates/Solution/Solution"
 import {
@@ -22,9 +23,7 @@ import {
   Refunded,
   SolutionUpdated,
   Split,
-  StakeAdded,
-  StakeRemoved,
-  StakeTransferred,
+  Stake,
 } from "../generated/schema"
 
 export function handleContributed(event: ContributedEvent): void {
@@ -34,7 +33,7 @@ export function handleContributed(event: ContributedEvent): void {
   entity.addr = event.params.addr
   entity.positionIndex = event.params.positionIndex
   entity.amount = event.params.amount
-  entity.totalTokensContributed = event.params.totalTokensContributed
+  entity.totalTokens = event.params.totalTokens
   entity.totalShares = event.params.totalShares
 
   entity.blockNumber = event.block.number
@@ -127,7 +126,7 @@ export function handleRefunded(event: RefundedEvent): void {
   )
   entity.addr = event.params.addr
   entity.amount = event.params.amount
-  entity.stakeAwarded = event.params.stakeAwarded
+  entity.stakeCollected = event.params.stakeCollected
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
@@ -157,7 +156,7 @@ export function handleSplit(event: SplitEvent): void {
   entity.originalPositionIndex = event.params.originalPositionIndex
   entity.numNewPositions = event.params.numNewPositions
   entity.firstNewPositionIndex = event.params.firstNewPositionIndex
-  entity.amountPerNewPosition = event.params.amountPerNewPosition
+  entity.contributionPerNewPosition = event.params.contributionPerNewPosition
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
@@ -166,47 +165,30 @@ export function handleSplit(event: SplitEvent): void {
   entity.save()
 }
 
-export function handleStakeAdded(event: StakeAddedEvent): void {
-  let entity = new StakeAdded(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.addr = event.params.addr
-  entity.amount = event.params.amount
-  entity.totalStake = event.params.totalStake
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleStakeRemoved(event: StakeRemovedEvent): void {
-  let entity = new StakeRemoved(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.addr = event.params.addr
-  entity.amount = event.params.amount
-  entity.totalStake = event.params.totalStake
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+export function handleStakeUpdated(event: StakeUpdatedEvent): void {
+  let stake = new Stake(stakeId(event.address, event.params.addr));
+  stake.user = event.params.addr;
+  stake.solution = event.address;
+  stake.amount = event.params.stake;
+  stake.save();
 }
 
 export function handleStakeTransferred(event: StakeTransferredEvent): void {
-  let entity = new StakeTransferred(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.from = event.params.from
-  entity.to = event.params.to
-  entity.amount = event.params.amount
+  let stakeFrom = new Stake(stakeId(event.address, event.params.from));
+  stakeFrom.user = event.params.from;
+  stakeFrom.solution = event.address;
+  stakeFrom.amount = BigInt.zero();
+  stakeFrom.save();
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  let stakeTo = new Stake(stakeId(event.address, event.params.to));
+  stakeTo.user = event.params.to;
+  stakeTo.solution = event.address;
+  stakeTo.amount = event.params.newStake;
+  stakeTo.save();
+}
 
-  entity.save()
+function stakeId(solutionAddress: Bytes, userAddress: Bytes): Bytes {
+  const stakeBytes = Bytes.fromUTF8("stake");
+  const concatBytes = stakeBytes.concat(solutionAddress).concat(userAddress);
+  return Bytes.fromByteArray(crypto.keccak256(concatBytes));
 }

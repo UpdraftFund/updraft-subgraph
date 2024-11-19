@@ -53,7 +53,7 @@ export function handleSplit(event: SplitEvent): void {
   entity.originalPositionIndex = event.params.originalPositionIndex
   entity.numNewPositions = event.params.numNewPositions
   entity.firstNewPositionIndex = event.params.firstNewPositionIndex
-  entity.amountPerNewPosition = event.params.amountPerNewPosition
+  entity.contributionPerNewPosition = event.params.contributionPerNewPosition
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp

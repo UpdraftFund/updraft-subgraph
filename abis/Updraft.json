@@ -6,32 +6,64 @@
         "name": "feeToken_",
         "type": "address"
       },
-      { "internalType": "uint256", "name": "minFee_", "type": "uint256" },
-      { "internalType": "uint256", "name": "percentFee_", "type": "uint256" },
-      { "internalType": "uint256", "name": "cycleLength_", "type": "uint256" },
-      { "internalType": "uint256", "name": "accrualRate_", "type": "uint256" },
-      { "internalType": "address", "name": "humanity_", "type": "address" }
+      {
+        "internalType": "uint256",
+        "name": "minFee_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "percentFee_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "cycleLength_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "accrualRate_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "humanity_",
+        "type": "address"
+      }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "owner", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
     ],
     "name": "OwnableInvalidOwner",
     "type": "error"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
     ],
     "name": "OwnableUnauthorizedAccount",
     "type": "error"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "token", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
     ],
     "name": "SafeERC20FailedOperation",
     "type": "error"
@@ -175,7 +207,13 @@
   {
     "inputs": [],
     "name": "accrualRate",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -186,8 +224,16 @@
         "name": "contributorFee",
         "type": "uint256"
       },
-      { "internalType": "uint256", "name": "contribution", "type": "uint256" },
-      { "internalType": "bytes", "name": "ideaData", "type": "bytes" }
+      {
+        "internalType": "uint256",
+        "name": "contribution",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "ideaData",
+        "type": "bytes"
+      }
     ],
     "name": "createIdea",
     "outputs": [],
@@ -201,9 +247,21 @@
         "name": "contributorFee",
         "type": "uint256"
       },
-      { "internalType": "uint256", "name": "contribution", "type": "uint256" },
-      { "internalType": "bytes", "name": "ideaData", "type": "bytes" },
-      { "internalType": "bytes", "name": "profileData", "type": "bytes" }
+      {
+        "internalType": "uint256",
+        "name": "contribution",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "ideaData",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes",
+        "name": "profileData",
+        "type": "bytes"
+      }
     ],
     "name": "createIdeaWithProfile",
     "outputs": [],
@@ -212,21 +270,41 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "idea", "type": "address" },
+      {
+        "internalType": "address",
+        "name": "idea",
+        "type": "address"
+      },
       {
         "internalType": "contract IERC20",
         "name": "fundingToken",
         "type": "address"
       },
-      { "internalType": "uint256", "name": "stake", "type": "uint256" },
-      { "internalType": "uint256", "name": "goal", "type": "uint256" },
-      { "internalType": "uint256", "name": "deadline", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "stake",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "goal",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "deadline",
+        "type": "uint256"
+      },
       {
         "internalType": "uint256",
         "name": "contributorFee",
         "type": "uint256"
       },
-      { "internalType": "bytes", "name": "solutionData", "type": "bytes" }
+      {
+        "internalType": "bytes",
+        "name": "solutionData",
+        "type": "bytes"
+      }
     ],
     "name": "createSolution",
     "outputs": [],
@@ -235,22 +313,46 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "idea", "type": "address" },
+      {
+        "internalType": "address",
+        "name": "idea",
+        "type": "address"
+      },
       {
         "internalType": "contract IERC20",
         "name": "fundingToken",
         "type": "address"
       },
-      { "internalType": "uint256", "name": "stake", "type": "uint256" },
-      { "internalType": "uint256", "name": "goal", "type": "uint256" },
-      { "internalType": "uint256", "name": "deadline", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "stake",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "goal",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "deadline",
+        "type": "uint256"
+      },
       {
         "internalType": "uint256",
         "name": "contributorFee",
         "type": "uint256"
       },
-      { "internalType": "bytes", "name": "solutionData", "type": "bytes" },
-      { "internalType": "bytes", "name": "profileData", "type": "bytes" }
+      {
+        "internalType": "bytes",
+        "name": "solutionData",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes",
+        "name": "profileData",
+        "type": "bytes"
+      }
     ],
     "name": "createSolutionWithProfile",
     "outputs": [],
@@ -260,7 +362,13 @@
   {
     "inputs": [],
     "name": "cycleLength",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -268,7 +376,11 @@
     "inputs": [],
     "name": "feeToken",
     "outputs": [
-      { "internalType": "contract IERC20", "name": "", "type": "address" }
+      {
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -276,35 +388,65 @@
   {
     "inputs": [],
     "name": "humanity",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "minFee",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "owner",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "percentFee",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "percentScale",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -317,7 +459,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "rate", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "rate",
+        "type": "uint256"
+      }
     ],
     "name": "setAccrualRate",
     "outputs": [],
@@ -326,7 +472,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "length", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "length",
+        "type": "uint256"
+      }
     ],
     "name": "setCycleLength",
     "outputs": [],
@@ -335,7 +485,11 @@
   },
   {
     "inputs": [
-      { "internalType": "contract IERC20", "name": "token", "type": "address" }
+      {
+        "internalType": "contract IERC20",
+        "name": "token",
+        "type": "address"
+      }
     ],
     "name": "setFeeToken",
     "outputs": [],
@@ -344,7 +498,11 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "humanity_", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "humanity_",
+        "type": "address"
+      }
     ],
     "name": "setHumanity",
     "outputs": [],
@@ -352,14 +510,26 @@
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint256", "name": "fee", "type": "uint256" }],
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "fee",
+        "type": "uint256"
+      }
+    ],
     "name": "setMinFee",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint256", "name": "fee", "type": "uint256" }],
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "fee",
+        "type": "uint256"
+      }
+    ],
     "name": "setPercentFee",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -367,7 +537,11 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "newOwner", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
     ],
     "name": "transferOwnership",
     "outputs": [],
@@ -376,7 +550,11 @@
   },
   {
     "inputs": [
-      { "internalType": "bytes", "name": "profileData", "type": "bytes" }
+      {
+        "internalType": "bytes",
+        "name": "profileData",
+        "type": "bytes"
+      }
     ],
     "name": "updateProfile",
     "outputs": [],
