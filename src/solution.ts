@@ -1,194 +1,143 @@
-import { crypto, BigInt, Bytes } from "@graphprotocol/graph-ts";
-
+import { store, crypto, BigInt, Bytes } from '@graphprotocol/graph-ts'
+import { Solution, User, SolutionContribution, Stake } from "../generated/schema"
 import {
-  Contributed as ContributedEvent,
-  FeesCollected as FeesCollectedEvent,
-  FundsWithdrawn as FundsWithdrawnEvent,
-  GoalExtended as GoalExtendedEvent,
-  OwnershipTransferred as OwnershipTransferredEvent,
-  PositionTransferred as PositionTransferredEvent,
-  Refunded as RefundedEvent,
-  SolutionUpdated as SolutionUpdatedEvent,
-  Split as SplitEvent,
-  StakeUpdated as StakeUpdatedEvent,
-  StakeTransferred as StakeTransferredEvent,
-} from "../generated/templates/Solution/Solution"
-import {
-  SolutionContributed,
-  FeesCollected,
-  FundsWithdrawn,
+  Contributed,
   GoalExtended,
-  OwnershipTransferred,
   PositionTransferred,
   Refunded,
   SolutionUpdated,
   Split,
-  Stake,
-} from "../generated/schema"
+  StakeUpdated,
+  StakeTransferred,
+} from "../generated/templates/Solution/Solution"
 
-export function handleContributed(event: ContributedEvent): void {
-  let entity = new SolutionContributed(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.addr = event.params.addr
-  entity.positionIndex = event.params.positionIndex
-  entity.amount = event.params.amount
-  entity.totalTokens = event.params.totalTokens
-  entity.totalShares = event.params.totalShares
+export function handleContributed(event: Contributed): void {
+  let solution = Solution.load(event.address)!;
+  solution.shares = event.params.totalShares;
+  solution.save();
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  let funder = User.load(event.params.addr);
+  if (funder == null) {
+    funder = new User(event.params.addr);
+    funder.save();
+  }
 
-  entity.save()
+  let contribution = new SolutionContribution(
+    contributionId(event.address, event.params.addr, event.params.positionIndex));
+  contribution.solution = event.address;
+  contribution.funder = event.params.addr;
+  contribution.positionIndex = event.params.positionIndex;
+  contribution.contribution = event.params.amount;
+  contribution.refunded = false;
+  contribution.save();
 }
 
-export function handleFeesCollected(event: FeesCollectedEvent): void {
-  let entity = new FeesCollected(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.addr = event.params.addr
-  entity.positionIndex = event.params.positionIndex
-  entity.amount = event.params.amount
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+export function handleGoalExtended(event: GoalExtended): void {
+  let solution = Solution.load(event.address)!;
+  solution.fundingGoal = event.params.goal;
+  solution.deadline = event.params.deadline;
+  solution.save();
 }
 
-export function handleFundsWithdrawn(event: FundsWithdrawnEvent): void {
-  let entity = new FundsWithdrawn(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.to = event.params.to
-  entity.amount = event.params.amount
+export function handlePositionTransferred(event: PositionTransferred): void {
+  store.remove('SolutionContribution',
+    contributionId(event.address, event.params.sender, event.params.senderPositionIndex).toHex());
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  let recipient = User.load(event.params.recipient);
+  if (recipient == null) {
+    recipient = new User(event.params.recipient);
+    recipient.save();
+  }
 
-  entity.save()
+  let recipientPosition = new SolutionContribution(
+    contributionId(event.address, event.params.recipient, event.params.recipientPositionIndex));
+  recipientPosition.solution = event.address;
+  recipientPosition.funder = event.params.recipient;
+  recipientPosition.positionIndex = event.params.recipientPositionIndex;
+  recipientPosition.contribution = event.params.contribution;
+  recipientPosition.refunded = false;
+  recipientPosition.save();
 }
 
-export function handleGoalExtended(event: GoalExtendedEvent): void {
-  let entity = new GoalExtended(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.goal = event.params.goal
-  entity.deadline = event.params.deadline
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+export function handleRefunded(event: Refunded): void {
+  let contribution = SolutionContribution.load(
+    contributionId(event.address, event.params.addr, event.params.positionIndex))!;
+  contribution.refunded = true;
+  contribution.save();
 }
 
-export function handleOwnershipTransferred(
-  event: OwnershipTransferredEvent,
-): void {
-  let entity = new OwnershipTransferred(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.previousOwner = event.params.previousOwner
-  entity.newOwner = event.params.newOwner
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+export function handleSolutionUpdated(event: SolutionUpdated): void {
+  let solution = Solution.load(event.address)!;
+  solution.info = event.params.data;
+  solution.save();
 }
 
-export function handlePositionTransferred(
-  event: PositionTransferredEvent,
-): void {
-  let entity = new PositionTransferred(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.sender = event.params.sender
-  entity.recipient = event.params.recipient
-  entity.senderPositionIndex = event.params.senderPositionIndex
-  entity.recipientPositionIndex = event.params.recipientPositionIndex
+export function handleSplit(event: Split): void {
+  let start = event.params.firstNewPositionIndex.toI32();
+  let end = event.params.numNewPositions.toI32() + start;
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  // Loop using i32 values
+  for (let i = start; i < end; ++i) {
+    let positionIndex = BigInt.fromI32(i);
+    let c = new SolutionContribution(contributionId(event.address, event.params.addr, positionIndex));
+    c.solution = event.address;
+    c.funder = event.params.addr;
+    c.positionIndex = positionIndex;
+    c.contribution = event.params.contributionPerNewPosition;
+    c.refunded = false;
+    c.save();
+  }
 
-  entity.save()
+  let original = new SolutionContribution(
+    contributionId(event.address, event.params.addr, event.params.originalPositionIndex));
+  original.solution = event.address;
+  original.funder = event.params.addr;
+  original.positionIndex = event.params.originalPositionIndex;
+  original.contribution = event.params.contributionLeftInOriginal;
+  original.refunded = false;
+  original.save();
 }
 
-export function handleRefunded(event: RefundedEvent): void {
-  let entity = new Refunded(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.addr = event.params.addr
-  entity.amount = event.params.amount
-  entity.stakeCollected = event.params.stakeCollected
+export function handleStakeUpdated(event: StakeUpdated): void {
+  let solution = Solution.load(event.address)!;
+  solution.stake = event.params.totalStake;
+  solution.save();
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  let staker = User.load(event.params.addr);
+  if (staker == null) {
+    staker = new User(event.params.addr);
+    staker.save();
+  }
 
-  entity.save()
-}
-
-export function handleSolutionUpdated(event: SolutionUpdatedEvent): void {
-  let entity = new SolutionUpdated(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.data = event.params.data
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleSplit(event: SplitEvent): void {
-  let entity = new Split(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.addr = event.params.addr
-  entity.originalPositionIndex = event.params.originalPositionIndex
-  entity.numNewPositions = event.params.numNewPositions
-  entity.firstNewPositionIndex = event.params.firstNewPositionIndex
-  entity.contributionPerNewPosition = event.params.contributionPerNewPosition
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleStakeUpdated(event: StakeUpdatedEvent): void {
   let stake = new Stake(stakeId(event.address, event.params.addr));
-  stake.user = event.params.addr;
+  stake.staker = event.params.addr;
   stake.solution = event.address;
   stake.amount = event.params.stake;
   stake.save();
 }
 
-export function handleStakeTransferred(event: StakeTransferredEvent): void {
-  let stakeFrom = new Stake(stakeId(event.address, event.params.from));
-  stakeFrom.user = event.params.from;
-  stakeFrom.solution = event.address;
-  stakeFrom.amount = BigInt.zero();
-  stakeFrom.save();
+export function handleStakeTransferred(event: StakeTransferred): void {
+  store.remove('Stake', stakeId(event.address, event.params.from).toHex());
+
+  let staker = User.load(event.params.to);
+  if (staker == null) {
+    staker = new User(event.params.to);
+    staker.save();
+  }
 
   let stakeTo = new Stake(stakeId(event.address, event.params.to));
-  stakeTo.user = event.params.to;
+  stakeTo.staker = event.params.to;
   stakeTo.solution = event.address;
   stakeTo.amount = event.params.newStake;
   stakeTo.save();
 }
 
+function contributionId(solutionAddress: Bytes, userAddress: Bytes, positionIndex: BigInt): Bytes {
+  const concatBytes = solutionAddress.concat(userAddress).concatI32(positionIndex.toI32());
+  return Bytes.fromByteArray(crypto.keccak256(concatBytes));
+}
+
 function stakeId(solutionAddress: Bytes, userAddress: Bytes): Bytes {
-  const stakeBytes = Bytes.fromUTF8("stake");
-  const concatBytes = stakeBytes.concat(solutionAddress).concat(userAddress);
+  const concatBytes = solutionAddress.concat(userAddress);
   return Bytes.fromByteArray(crypto.keccak256(concatBytes));
 }

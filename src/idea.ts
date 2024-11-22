@@ -1,80 +1,80 @@
-import {
-  Contributed as ContributedEvent,
-  PositionTransferred as PositionTransferredEvent,
-  Split as SplitEvent,
-  Withdrew as WithdrewEvent,
-} from "../generated/templates/Idea/Idea"
-import {
-  Contributed,
-  PositionTransferred,
-  Split,
-  Withdrew,
-} from "../generated/schema"
+import { store, crypto, BigInt, Bytes } from '@graphprotocol/graph-ts'
+import { Contributed, PositionTransferred, Split, Withdrew } from "../generated/templates/Idea/Idea"
+import { Idea, User, IdeaContribution } from "../generated/schema"
 
-export function handleContributed(event: ContributedEvent): void {
-  let entity = new Contributed(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.addr = event.params.addr
-  entity.positionIndex = event.params.positionIndex
-  entity.amount = event.params.amount
-  entity.totalShares = event.params.totalShares
+export function handleContributed(event: Contributed): void {
+  let idea = Idea.load(event.address)!;
+  idea.shares = event.params.totalShares;
+  idea.save();
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  let funder = User.load(event.params.addr);
+  if (funder == null) {
+    funder = new User(event.params.addr);
+    funder.save();
+  }
 
-  entity.save()
+  let contribution = new IdeaContribution(
+    contributionId(event.address, event.params.addr, event.params.positionIndex));
+  contribution.idea = event.address;
+  contribution.funder = event.params.addr;
+  contribution.positionIndex = event.params.positionIndex;
+  contribution.contribution = event.params.amount;
+  contribution.save();
 }
 
-export function handlePositionTransferred(
-  event: PositionTransferredEvent,
-): void {
-  let entity = new PositionTransferred(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.sender = event.params.sender
-  entity.recipient = event.params.recipient
-  entity.senderPositionIndex = event.params.senderPositionIndex
-  entity.recipientPositionIndex = event.params.recipientPositionIndex
+export function handlePositionTransferred(event: PositionTransferred,): void {
+  store.remove('IdeaContribution',
+    contributionId(event.address, event.params.sender, event.params.senderPositionIndex).toHex());
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  let recipient = User.load(event.params.recipient);
+  if (recipient == null) {
+    recipient = new User(event.params.recipient);
+    recipient.save();
+  }
 
-  entity.save()
+  let recipientPosition = new IdeaContribution(
+    contributionId(event.address, event.params.recipient, event.params.recipientPositionIndex));
+  recipientPosition.idea = event.address;
+  recipientPosition.funder = event.params.recipient;
+  recipientPosition.positionIndex = event.params.recipientPositionIndex;
+  recipientPosition.contribution = event.params.contribution;
+  recipientPosition.save();
 }
 
-export function handleSplit(event: SplitEvent): void {
-  let entity = new Split(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.addr = event.params.addr
-  entity.originalPositionIndex = event.params.originalPositionIndex
-  entity.numNewPositions = event.params.numNewPositions
-  entity.firstNewPositionIndex = event.params.firstNewPositionIndex
-  entity.contributionPerNewPosition = event.params.contributionPerNewPosition
+export function handleSplit(event: Split): void {
+  let start = event.params.firstNewPositionIndex.toI32();
+  let end = event.params.numNewPositions.toI32() + start;
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  // Loop using i32 values
+  for (let i = start; i < end; ++i) {
+    let positionIndex = BigInt.fromI32(i);
+    let contribution = new IdeaContribution(contributionId(event.address, event.params.addr, positionIndex));
+    contribution.idea = event.address;
+    contribution.funder = event.params.addr;
+    contribution.positionIndex = positionIndex;
+    contribution.contribution = event.params.contributionPerNewPosition;
+    contribution.save();
+  }
 
-  entity.save()
+  let original = new IdeaContribution(
+    contributionId(event.address, event.params.addr, event.params.originalPositionIndex));
+  original.idea = event.address;
+  original.funder = event.params.addr;
+  original.positionIndex = event.params.originalPositionIndex;
+  original.contribution = event.params.contributionLeftInOriginal;
+  original.save();
 }
 
-export function handleWithdrew(event: WithdrewEvent): void {
-  let entity = new Withdrew(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.addr = event.params.addr
-  entity.positionIndex = event.params.positionIndex
-  entity.amount = event.params.amount
-  entity.shares = event.params.shares
-  entity.totalShares = event.params.totalShares
+export function handleWithdrew(event: Withdrew): void {
+  let idea = Idea.load(event.address)!;
+  idea.shares = event.params.totalShares;
+  idea.save();
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  store.remove('IdeaContribution',
+    contributionId(event.address, event.params.addr, event.params.positionIndex).toHex());
+}
 
-  entity.save()
+function contributionId(ideaAddress: Bytes, userAddress: Bytes, positionIndex: BigInt): Bytes {
+  const concatBytes = ideaAddress.concat(userAddress).concatI32(positionIndex.toI32());
+  return Bytes.fromByteArray(crypto.keccak256(concatBytes));
 }

@@ -1,4 +1,6 @@
 specVersion: 1.0.0
+features:
+  - fullTextSearch
 indexerHints:
   prune: auto
 schema:
@@ -16,18 +18,15 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - IdeaCreated
-        - OwnershipTransferred
-        - Profile
-        - SolutionCreated
+        - Idea
+        - User
+        - Solution
       abis:
         - name: Updraft
           file: ./abis/Updraft.json
       eventHandlers:
         - event: IdeaCreated(indexed address,indexed address,uint256,uint256,bytes)
           handler: handleIdeaCreated
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
         - event: ProfileUpdated(indexed address,bytes)
           handler: handleProfileUpdated
         - event: SolutionCreated(indexed address,indexed address,indexed
@@ -45,10 +44,7 @@ templates:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - Contributed
-        - PositionTransferred
-        - Split
-        - Withdrew
+        - IdeaContribution
       abis:
         - name: Idea
           file: ./abis/Idea.json
@@ -72,18 +68,8 @@ templates:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - SolutionContributed
-        - FeesCollected
-        - FundsWithdrawn
-        - GoalExtended
-        - SolutionOwnershipTransferred
-        - SolutionPositionTransferred
-        - Refunded
-        - SolutionUpdated
-        - SolutionSplit
-        - StakeAdded
-        - StakeRemoved
-        - StakeTransferred
+        - SolutionContribution
+        - Stake
       abis:
         - name: Solution
           file: ./abis/Solution.json
@@ -92,15 +78,11 @@ templates:
           handler: handleContributed
         - event: FeesCollected(indexed address,uint256,uint256)
           handler: handleFeesCollected
-        - event: FundsWithdrawn(address,uint256,uint256)
-          handler: handleFundsWithdrawn
         - event: GoalExtended(uint256,uint256)
           handler: handleGoalExtended
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
         - event: PositionTransferred(indexed address,indexed address,uint256,uint256,uint256)
           handler: handlePositionTransferred
-        - event: Refunded(indexed address,uint256,uint256,uint256,uint256)
+        - event: Refunded(indexed address,uint256,uint256,uint256)
           handler: handleRefunded
         - event: SolutionUpdated(bytes)
           handler: handleSolutionUpdated
