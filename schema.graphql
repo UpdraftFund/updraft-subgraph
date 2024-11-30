@@ -12,6 +12,7 @@ type User @entity {
 
 type Idea @entity {
   id: Bytes! # address
+  creator: User! @index
   startTime: BigInt! @index # uint256
   shares: BigInt! @index # uint256
   name: String!

@@ -27,6 +27,7 @@ export function handleIdeaCreated(event: IdeaCreated): void {
     idea.tags = tags.toArray().map<string>((value: JSONValue) => value.toString());
   }
 
+  idea.creator = event.params.creator;
   idea.shares = event.params.contribution;
   idea.startTime = event.block.timestamp;
   idea.save();
