@@ -17,7 +17,7 @@ export function handleContributed(event: Contributed): void {
   solution.save();
 
   let funder = User.load(event.params.addr);
-  if (funder == null) {
+  if (!funder) {
     funder = new User(event.params.addr);
     funder.save();
   }
@@ -44,7 +44,7 @@ export function handlePositionTransferred(event: PositionTransferred): void {
     contributionId(event.address, event.params.sender, event.params.senderPositionIndex).toHex());
 
   let recipient = User.load(event.params.recipient);
-  if (recipient == null) {
+  if (!recipient) {
     recipient = new User(event.params.recipient);
     recipient.save();
   }
@@ -104,7 +104,7 @@ export function handleStakeUpdated(event: StakeUpdated): void {
   solution.save();
 
   let staker = User.load(event.params.addr);
-  if (staker == null) {
+  if (!staker) {
     staker = new User(event.params.addr);
     staker.save();
   }
@@ -120,7 +120,7 @@ export function handleStakeTransferred(event: StakeTransferred): void {
   store.remove('Stake', stakeId(event.address, event.params.from).toHex());
 
   let staker = User.load(event.params.to);
-  if (staker == null) {
+  if (!staker) {
     staker = new User(event.params.to);
     staker.save();
   }

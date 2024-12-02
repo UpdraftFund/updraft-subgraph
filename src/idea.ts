@@ -8,7 +8,7 @@ export function handleContributed(event: Contributed): void {
   idea.save();
 
   let funder = User.load(event.params.addr);
-  if (funder == null) {
+  if (!funder) {
     funder = new User(event.params.addr);
     funder.save();
   }
@@ -27,7 +27,7 @@ export function handlePositionTransferred(event: PositionTransferred,): void {
     contributionId(event.address, event.params.sender, event.params.senderPositionIndex).toHex());
 
   let recipient = User.load(event.params.recipient);
-  if (recipient == null) {
+  if (!recipient) {
     recipient = new User(event.params.recipient);
     recipient.save();
   }

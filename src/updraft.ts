@@ -51,7 +51,7 @@ export function handleSolutionCreated(event: SolutionCreated): void {
   let solution = new Solution(event.params.solution)
 
   let idea = Idea.load(event.params.idea);
-  if (idea === null) {
+  if (!idea) {
     log.warning("Idea entity not found: {} , Solution: {} not created", [
       event.params.idea.toString(),
       event.params.solution.toString()
@@ -60,7 +60,7 @@ export function handleSolutionCreated(event: SolutionCreated): void {
   }
 
   let drafter = User.load(event.params.creator);
-  if (drafter == null) {
+  if (!drafter) {
     drafter = new User(event.params.creator);
     drafter.save();
   }
