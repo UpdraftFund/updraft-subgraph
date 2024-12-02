@@ -15,7 +15,7 @@ type Idea @entity {
   creator: User! @index
   startTime: BigInt! @index # uint256
   shares: BigInt! @index # uint256
-  name: String!
+  name: String
   description: String
   tags: [String!] @index
 }

@@ -1,4 +1,4 @@
-import { BigInt, Bytes, JSONValue, json, log } from "@graphprotocol/graph-ts"
+import { BigInt, Bytes, JSONValue, json, JSONValueKind, log } from "@graphprotocol/graph-ts"
 import { IdeaCreated, ProfileUpdated, SolutionCreated} from "../generated/Updraft/Updraft"
 import { User, Idea, Solution } from "../generated/schema"
 import { Idea as IdeaTemplate, Solution as SolutionTemplate } from '../generated/templates'
@@ -7,24 +7,29 @@ export function handleIdeaCreated(event: IdeaCreated): void {
   let idea = new Idea(event.params.idea);
 
   // Parse the JSON data from the bytes blob
-  let jsonData = json.fromBytes(event.params.data as Bytes).toObject();
+  let result = json.try_fromBytes(event.params.data as Bytes);
+  if (result.isOk && result.value.kind === JSONValueKind.OBJECT) {
+    let jsonData = result.value.toObject();
 
-  // Extract the name if it exists
-  let name = jsonData.get("name");
-  if (name) {
-    idea.name = name.toString();
-  }
+    // Extract the name if it's a string
+    let name = jsonData.get("name");
+    if (name && name.kind === JSONValueKind.STRING) {
+      idea.name = name.toString();
+    }
 
-  // Extract the description if it exists
-  let description = jsonData.get("description");
-  if (description) {
-    idea.description = description.toString();
-  }
+    // Extract the description if it's a string
+    let description = jsonData.get("description");
+    if (description && description.kind === JSONValueKind.STRING) {
+      idea.description = description.toString();
+    }
 
-  // Extract the tags array if it exists
-  let tags = jsonData.get("tags");
-  if (tags) {
-    idea.tags = tags.toArray().map<string>((value: JSONValue) => value.toString());
+    // Extract the tags if it's an array of strings
+    let tags = jsonData.get("tags");
+    if (tags && tags.kind === JSONValueKind.ARRAY) {
+      idea.tags = tags.toArray()
+        .filter(tag => tag.kind === JSONValueKind.STRING)
+        .map<string>(tag => tag.toString());
+    }
   }
 
   idea.creator = event.params.creator;
@@ -47,7 +52,10 @@ export function handleSolutionCreated(event: SolutionCreated): void {
 
   let idea = Idea.load(event.params.idea);
   if (idea === null) {
-    log.error("Idea entity not found: {}", [event.params.idea.toString()]);
+    log.warning("Idea entity not found: {} , Solution: {} not created", [
+      event.params.idea.toString(),
+      event.params.solution.toString()
+    ]);
     return;
   }
 
