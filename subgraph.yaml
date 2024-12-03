@@ -4,7 +4,7 @@ features:
 indexerHints:
   prune: auto
 schema:
-  file: ./schema.graphql
+  file: ./updraft-schemas/schema.graphql
 dataSources:
   - kind: ethereum
     name: Updraft
