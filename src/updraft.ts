@@ -1,6 +1,6 @@
 import { BigInt, Bytes, JSONValue, json, JSONValueKind, log } from "@graphprotocol/graph-ts"
 import { IdeaCreated, ProfileUpdated, SolutionCreated} from "../generated/Updraft/Updraft"
-import { User, Idea, Solution } from "../generated/schema"
+import { User, Idea, Solution, TagCount } from "../generated/schema"
 import { Idea as IdeaTemplate, Solution as SolutionTemplate } from '../generated/templates'
 
 export function handleIdeaCreated(event: IdeaCreated): void {
@@ -26,9 +26,25 @@ export function handleIdeaCreated(event: IdeaCreated): void {
     // Extract the tags if it's an array of strings
     let tags = jsonData.get("tags");
     if (tags && tags.kind === JSONValueKind.ARRAY) {
-      idea.tags = tags.toArray()
+      const tagArray = tags.toArray()
         .filter(tag => tag.kind === JSONValueKind.STRING)
         .map<string>(tag => tag.toString());
+
+      if(tagArray){
+        idea.tags = tagArray;
+
+        for (let i = 0; i < tagArray.length; ++i){
+          let tag = tagArray[i];
+          let tagCount = TagCount.load(tag);
+          if (tagCount) {
+            tagCount.count += 1;
+          } else {
+            tagCount = new TagCount(tag);
+            tagCount.count = 1;
+          }
+          tagCount.save();
+        }
+      }
     }
   }
 
