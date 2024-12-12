@@ -21,6 +21,7 @@ dataSources:
         - Idea
         - User
         - Solution
+        - TagCount
       abis:
         - name: Updraft
           file: ./abis/Updraft.json
