@@ -14,13 +14,13 @@ export function handleIdeaCreated(event: IdeaCreated): void {
     // Extract the name if it's a string
     let name = jsonData.get("name");
     if (name && name.kind === JSONValueKind.STRING) {
-      idea.name = name.toString();
+      idea.name = name.toString().slice(0,100);
     }
 
     // Extract the description if it's a string
     let description = jsonData.get("description");
     if (description && description.kind === JSONValueKind.STRING) {
-      idea.description = description.toString();
+      idea.description = description.toString().slice(0,4000);
     }
 
     // Extract the tags if it's an array of strings
@@ -28,12 +28,13 @@ export function handleIdeaCreated(event: IdeaCreated): void {
     if (tags && tags.kind === JSONValueKind.ARRAY) {
       const tagArray = tags.toArray()
         .filter(tag => tag.kind === JSONValueKind.STRING)
-        .map<string>(tag => tag.toString());
+        .map<string>(tag => tag.toString().slice(0,30));
 
       if(tagArray){
         idea.tags = tagArray;
+        const limit = Math.min(tagArray.length, 5)
 
-        for (let i = 0; i < tagArray.length; ++i){
+        for (let i = 0; i < limit; ++i){
           let tag = tagArray[i];
           let tagCount = TagCount.load(tag);
           if (tagCount) {
