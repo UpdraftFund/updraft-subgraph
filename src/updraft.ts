@@ -34,8 +34,15 @@ export function handleIdeaCreated(event: IdeaCreated): void {
         idea.tags = tagArray;
         const limit = Math.min(tagArray.length, 5)
 
+        // Don't allow using the same tag multiple times
+        const uniqueTags = new Set<string>();
+
         for (let i = 0; i < limit; ++i){
           let tag = tagArray[i];
+          if (uniqueTags.has(tag)) {
+            continue;
+          }
+          uniqueTags.add(tag);
           let tagCount = TagCount.load(tag);
           if (tagCount) {
             tagCount.count += 1;
