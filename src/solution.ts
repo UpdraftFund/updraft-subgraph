@@ -29,6 +29,7 @@ export function handleContributed(event: Contributed): void {
   contribution.positionIndex = event.params.positionIndex;
   contribution.contribution = event.params.amount;
   contribution.refunded = false;
+  contribution.createdTime = event.block.timestamp;
   contribution.save();
 }
 
@@ -36,6 +37,7 @@ export function handleGoalExtended(event: GoalExtended): void {
   let solution = Solution.load(event.address)!;
   solution.fundingGoal = event.params.goal;
   solution.deadline = event.params.deadline;
+  solution.modifiedTime = event.block.timestamp;
   solution.save();
 }
 
@@ -56,6 +58,7 @@ export function handlePositionTransferred(event: PositionTransferred): void {
   recipientPosition.positionIndex = event.params.recipientPositionIndex;
   recipientPosition.contribution = event.params.contribution;
   recipientPosition.refunded = false;
+  recipientPosition.createdTime = BigInt.fromI32(0);
   recipientPosition.save();
 }
 
@@ -69,6 +72,7 @@ export function handleRefunded(event: Refunded): void {
 export function handleSolutionUpdated(event: SolutionUpdated): void {
   let solution = Solution.load(event.address)!;
   solution.info = event.params.data;
+  solution.modifiedTime = event.block.timestamp;
   solution.save();
 }
 
@@ -85,6 +89,7 @@ export function handleSplit(event: Split): void {
     c.positionIndex = positionIndex;
     c.contribution = event.params.contributionPerNewPosition;
     c.refunded = false;
+    c.createdTime = BigInt.fromI32(0);
     c.save();
   }
 
@@ -95,6 +100,7 @@ export function handleSplit(event: Split): void {
   original.positionIndex = event.params.originalPositionIndex;
   original.contribution = event.params.contributionLeftInOriginal;
   original.refunded = false;
+  original.createdTime = BigInt.fromI32(0);
   original.save();
 }
 

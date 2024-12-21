@@ -93,6 +93,7 @@ export function handleSolutionCreated(event: SolutionCreated): void {
   solution.drafter = event.params.creator;
   solution.fundingToken = event.params.fundingToken;
   solution.startTime = event.block.timestamp;
+  solution.modifiedTime = event.block.timestamp;
   solution.deadline = event.params.deadline;
   solution.shares = BigInt.zero();
   solution.tokensContributed = BigInt.zero();

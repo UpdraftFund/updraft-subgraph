@@ -19,6 +19,7 @@ export function handleContributed(event: Contributed): void {
   contribution.funder = event.params.addr;
   contribution.positionIndex = event.params.positionIndex;
   contribution.contribution = event.params.amount;
+  contribution.createdTime = event.block.timestamp;
   contribution.save();
 }
 
@@ -38,6 +39,7 @@ export function handlePositionTransferred(event: PositionTransferred,): void {
   recipientPosition.funder = event.params.recipient;
   recipientPosition.positionIndex = event.params.recipientPositionIndex;
   recipientPosition.contribution = event.params.contribution;
+  recipientPosition.createdTime = BigInt.fromI32(0);
   recipientPosition.save();
 }
 
@@ -53,6 +55,7 @@ export function handleSplit(event: Split): void {
     contribution.funder = event.params.addr;
     contribution.positionIndex = positionIndex;
     contribution.contribution = event.params.contributionPerNewPosition;
+    contribution.createdTime = BigInt.fromI32(0);
     contribution.save();
   }
 
@@ -62,6 +65,7 @@ export function handleSplit(event: Split): void {
   original.funder = event.params.addr;
   original.positionIndex = event.params.originalPositionIndex;
   original.contribution = event.params.contributionLeftInOriginal;
+  original.createdTime = BigInt.fromI32(0);
   original.save();
 }
 
