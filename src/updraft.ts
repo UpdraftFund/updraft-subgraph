@@ -20,7 +20,7 @@ export function handleIdeaCreated(event: IdeaCreated): void {
     // Extract the description if it's a string
     let description = jsonData.get("description");
     if (description && description.kind === JSONValueKind.STRING) {
-      idea.description = description.toString().slice(0,4000);
+      idea.description = description.toString().slice(0,2500);
     }
 
     // Extract the tags if it's an array of strings
