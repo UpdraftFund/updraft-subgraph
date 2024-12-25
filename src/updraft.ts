@@ -59,6 +59,7 @@ export function handleIdeaCreated(event: IdeaCreated): void {
   idea.creator = event.params.creator;
   idea.shares = BigInt.zero();
   idea.startTime = event.block.timestamp;
+  idea.funderReward = event.params.contributorFee;
   idea.save();
 
   // Create a template instance to handle events from the new Idea contract
@@ -100,6 +101,7 @@ export function handleSolutionCreated(event: SolutionCreated): void {
   solution.fundingGoal = event.params.goal;
   solution.stake = event.params.stake;
   solution.info = event.params.data;
+  solution.funderReward = event.params.contributorFee;
   solution.save();
 
   // Create a template instance to handle events from the new Solution contract
