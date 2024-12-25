@@ -57,7 +57,7 @@ export function handleIdeaCreated(event: IdeaCreated): void {
   }
 
   idea.creator = event.params.creator;
-  idea.shares = event.params.contribution;
+  idea.shares = BigInt.zero();
   idea.startTime = event.block.timestamp;
   idea.save();
 
