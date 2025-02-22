@@ -8,7 +8,6 @@ import {
   SolutionUpdated,
   Split,
   StakeUpdated,
-  StakeTransferred,
 } from "../generated/templates/Solution/Solution"
 
 export function handleContributed(event: Contributed): void {

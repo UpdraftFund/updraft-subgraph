@@ -77,8 +77,6 @@ templates:
       eventHandlers:
         - event: Contributed(indexed address,uint256,uint256,uint256,uint256)
           handler: handleContributed
-        - event: FeesCollected(indexed address,uint256,uint256)
-          handler: handleFeesCollected
         - event: GoalExtended(uint256,uint256)
           handler: handleGoalExtended
         - event: PositionTransferred(indexed address,indexed address,uint256,uint256,uint256)
@@ -91,6 +89,4 @@ templates:
           handler: handleSplit
         - event: StakeUpdated(indexed address,uint256,uint256)
           handler: handleStakeUpdated
-        - event: StakeTransferred(indexed address,indexed address,uint256,uint256)
-          handler: handleStakeTransferred
       file: ./src/solution.ts
