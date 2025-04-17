@@ -13,6 +13,8 @@ import {
 export function handleContributed(event: Contributed): void {
   let solution = Solution.load(event.address)!;
   solution.shares = event.params.totalShares;
+  solution.tokensContributed = event.params.totalTokens;
+  solution.progress = solution.tokensContributed.div(solution.fundingGoal);
   solution.save();
 
   let funder = User.load(event.params.addr);
@@ -35,6 +37,7 @@ export function handleContributed(event: Contributed): void {
 export function handleGoalExtended(event: GoalExtended): void {
   let solution = Solution.load(event.address)!;
   solution.fundingGoal = event.params.goal;
+  solution.progress = solution.tokensContributed.div(solution.fundingGoal);
   solution.deadline = event.params.deadline;
   solution.modifiedTime = event.block.timestamp;
   solution.save();
