@@ -25,7 +25,7 @@ export function handleContributed(event: Contributed): void {
 
 export function handlePositionTransferred(event: PositionTransferred,): void {
   store.remove('IdeaContribution',
-    contributionId(event.address, event.params.sender, event.params.senderPositionIndex).toHex());
+    contributionId(event.address, event.params.sender, event.params.senderPositionIndex).toHexString());
 
   let recipient = User.load(event.params.recipient);
   if (!recipient) {
@@ -75,7 +75,7 @@ export function handleWithdrew(event: Withdrew): void {
   idea.save();
 
   store.remove('IdeaContribution',
-    contributionId(event.address, event.params.addr, event.params.positionIndex).toHex());
+    contributionId(event.address, event.params.addr, event.params.positionIndex).toHexString());
 }
 
 function contributionId(ideaAddress: Bytes, userAddress: Bytes, positionIndex: BigInt): Bytes {
