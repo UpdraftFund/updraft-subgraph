@@ -45,7 +45,7 @@ export function handleGoalExtended(event: GoalExtended): void {
 
 export function handlePositionTransferred(event: PositionTransferred): void {
   store.remove('SolutionContribution',
-    contributionId(event.address, event.params.sender, event.params.senderPositionIndex).toHex());
+    contributionId(event.address, event.params.sender, event.params.senderPositionIndex).toHexString());
 
   let recipient = User.load(event.params.recipient);
   if (!recipient) {
