@@ -10,9 +10,9 @@ dataSources:
     name: Updraft
     network: arbitrum-sepolia
     source:
-      address: "0xad64a459F591d47EAa82FDde0b4e1DbDB7012cCc"
+      address: "0x8A5d964e1045f9100Dea46E60354664EE7695F5d"
       abi: Updraft
-      startBlock: 100867698
+      startBlock: 152303148
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
