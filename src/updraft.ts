@@ -99,7 +99,7 @@ export function handleSolutionCreated(event: SolutionCreated): void {
   solution.shares = BigInt.zero();
   solution.tokensContributed = BigInt.zero();
   solution.fundingGoal = event.params.goal;
-  solution.progress = BigInt.zero();
+  solution.sweetness = event.params.stake.times(event.params.contributorFee);
   solution.stake = event.params.stake;
   solution.info = event.params.data;
   solution.funderReward = event.params.contributorFee;
