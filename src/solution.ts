@@ -1,4 +1,4 @@
-import { store, crypto, BigInt, Bytes } from '@graphprotocol/graph-ts'
+import { store, crypto, BigInt, Bytes, log } from '@graphprotocol/graph-ts'
 import { Solution, User, SolutionContribution } from "../generated/schema"
 import {
   Contributed,
@@ -107,7 +107,7 @@ export function handleSplit(event: Split): void {
 export function handleStakeUpdated(event: StakeUpdated): void {
   let solution = Solution.load(event.address)!;
   solution.stake = event.params.totalStake;
-  solution.sweetness = solution.stake.times(solution.funderReward);
+  solution.sweetness = event.params.totalStake.times(solution.funderReward);
   solution.save();
 }
 
