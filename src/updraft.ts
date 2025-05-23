@@ -1,4 +1,4 @@
-import { BigInt, Bytes, JSONValue, json, JSONValueKind, log } from "@graphprotocol/graph-ts"
+import { BigInt, Bytes, json, JSONValueKind, log } from "@graphprotocol/graph-ts"
 import { IdeaCreated, ProfileUpdated, SolutionCreated} from "../generated/Updraft/Updraft"
 import { User, Idea, Solution, TagCount } from "../generated/schema"
 import { Idea as IdeaTemplate, Solution as SolutionTemplate } from '../generated/templates'
