@@ -13,7 +13,7 @@ import {
 export function handleContributed(event: Contributed): void {
   let solution = Solution.load(event.address)!;
   solution.shares = event.params.totalShares;
-  solution.tokensContributed = event.params.totalTokens;
+  solution.tokensContributed = event.params.totalContributed;
   solution.save();
 
   let funder = User.load(event.params.addr);
