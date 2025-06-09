@@ -10,8 +10,8 @@ dataSources:
     name: Updraft
     network: arbitrum-sepolia
     source:
-      address: "0xB9eD909cA3c9070B6F6706d6b44396e33dA468a5"
       abi: Updraft
+      address: "0xB9eD909cA3c9070B6F6706d6b44396e33dA468a5"
       startBlock: 157779564
     mapping:
       kind: ethereum/events
@@ -52,7 +52,8 @@ templates:
       eventHandlers:
         - event: Contributed(indexed address,uint256,uint256,uint256,uint256)
           handler: handleContributed
-        - event: PositionTransferred(indexed address,indexed address,uint256,uint256,uint256)
+        - event: PositionTransferred(indexed address,indexed
+            address,uint256,uint256,uint256)
           handler: handlePositionTransferred
         - event: Split(indexed address,uint256,uint256,uint256,uint256,uint256)
           handler: handleSplit
@@ -79,7 +80,8 @@ templates:
           handler: handleContributed
         - event: GoalExtended(uint256,uint256)
           handler: handleGoalExtended
-        - event: PositionTransferred(indexed address,indexed address,uint256,uint256,uint256)
+        - event: PositionTransferred(indexed address,indexed
+            address,uint256,uint256,uint256)
           handler: handlePositionTransferred
         - event: Refunded(indexed address,uint256,uint256,uint256)
           handler: handleRefunded
