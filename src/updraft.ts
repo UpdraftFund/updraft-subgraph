@@ -14,13 +14,13 @@ export function handleIdeaCreated(event: IdeaCreated): void {
     // Extract the name if it's a string
     let name = jsonData.get("name");
     if (name && name.kind === JSONValueKind.STRING) {
-      idea.name = name.toString().slice(0,100);
+      idea.name = name.toString().slice(0,200);
     }
 
     // Extract the description if it's a string
     let description = jsonData.get("description");
     if (description && description.kind === JSONValueKind.STRING) {
-      idea.description = description.toString().slice(0,2500);
+      idea.description = description.toString().slice(0,8000);
     }
 
     // Extract the tags if it's an array of strings
