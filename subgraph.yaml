@@ -8,11 +8,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Updraft
-    network: arbitrum-sepolia
+    network: arbitrum-one
     source:
       abi: Updraft
-      address: "0xB9eD909cA3c9070B6F6706d6b44396e33dA468a5"
-      startBlock: 157779564
+      address: "0x08e87242f23904e22da12a392b2facbb56c2959a"
+      startBlock: 345598886
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -37,7 +37,7 @@ dataSources:
 templates:
   - kind: ethereum
     name: Idea
-    network: arbitrum-sepolia
+    network: arbitrum-one
     source:
       abi: Idea
     mapping:
@@ -62,7 +62,7 @@ templates:
       file: ./src/idea.ts
   - kind: ethereum
     name: Solution
-    network: arbitrum-sepolia
+    network: arbitrum-one
     source:
       abi: Solution
     mapping:
