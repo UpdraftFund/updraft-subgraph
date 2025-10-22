@@ -1,5 +1,5 @@
-import { store, crypto, BigInt, Bytes } from '@graphprotocol/graph-ts'
-import { Solution, User, SolutionContribution, Stake } from "../generated/schema"
+import { store, crypto, BigInt, Bytes, log } from '@graphprotocol/graph-ts'
+import { Solution, User, SolutionContribution } from "../generated/schema"
 import {
   Contributed,
   GoalExtended,
@@ -8,16 +8,16 @@ import {
   SolutionUpdated,
   Split,
   StakeUpdated,
-  StakeTransferred,
 } from "../generated/templates/Solution/Solution"
 
 export function handleContributed(event: Contributed): void {
   let solution = Solution.load(event.address)!;
   solution.shares = event.params.totalShares;
+  solution.tokensContributed = event.params.totalContributed;
   solution.save();
 
   let funder = User.load(event.params.addr);
-  if (funder == null) {
+  if (!funder) {
     funder = new User(event.params.addr);
     funder.save();
   }
@@ -29,6 +29,7 @@ export function handleContributed(event: Contributed): void {
   contribution.positionIndex = event.params.positionIndex;
   contribution.contribution = event.params.amount;
   contribution.refunded = false;
+  contribution.createdTime = event.block.timestamp;
   contribution.save();
 }
 
@@ -36,15 +37,16 @@ export function handleGoalExtended(event: GoalExtended): void {
   let solution = Solution.load(event.address)!;
   solution.fundingGoal = event.params.goal;
   solution.deadline = event.params.deadline;
+  solution.modifiedTime = event.block.timestamp;
   solution.save();
 }
 
 export function handlePositionTransferred(event: PositionTransferred): void {
   store.remove('SolutionContribution',
-    contributionId(event.address, event.params.sender, event.params.senderPositionIndex).toHex());
+    contributionId(event.address, event.params.sender, event.params.senderPositionIndex).toHexString());
 
   let recipient = User.load(event.params.recipient);
-  if (recipient == null) {
+  if (!recipient) {
     recipient = new User(event.params.recipient);
     recipient.save();
   }
@@ -56,6 +58,7 @@ export function handlePositionTransferred(event: PositionTransferred): void {
   recipientPosition.positionIndex = event.params.recipientPositionIndex;
   recipientPosition.contribution = event.params.contribution;
   recipientPosition.refunded = false;
+  recipientPosition.createdTime = BigInt.fromI32(0);
   recipientPosition.save();
 }
 
@@ -69,6 +72,7 @@ export function handleRefunded(event: Refunded): void {
 export function handleSolutionUpdated(event: SolutionUpdated): void {
   let solution = Solution.load(event.address)!;
   solution.info = event.params.data;
+  solution.modifiedTime = event.block.timestamp;
   solution.save();
 }
 
@@ -85,6 +89,7 @@ export function handleSplit(event: Split): void {
     c.positionIndex = positionIndex;
     c.contribution = event.params.contributionPerNewPosition;
     c.refunded = false;
+    c.createdTime = BigInt.fromI32(0);
     c.save();
   }
 
@@ -95,49 +100,18 @@ export function handleSplit(event: Split): void {
   original.positionIndex = event.params.originalPositionIndex;
   original.contribution = event.params.contributionLeftInOriginal;
   original.refunded = false;
+  original.createdTime = BigInt.fromI32(0);
   original.save();
 }
 
 export function handleStakeUpdated(event: StakeUpdated): void {
   let solution = Solution.load(event.address)!;
   solution.stake = event.params.totalStake;
+  solution.sweetness = event.params.totalStake.times(solution.funderReward);
   solution.save();
-
-  let staker = User.load(event.params.addr);
-  if (staker == null) {
-    staker = new User(event.params.addr);
-    staker.save();
-  }
-
-  let stake = new Stake(stakeId(event.address, event.params.addr));
-  stake.staker = event.params.addr;
-  stake.solution = event.address;
-  stake.amount = event.params.stake;
-  stake.save();
-}
-
-export function handleStakeTransferred(event: StakeTransferred): void {
-  store.remove('Stake', stakeId(event.address, event.params.from).toHex());
-
-  let staker = User.load(event.params.to);
-  if (staker == null) {
-    staker = new User(event.params.to);
-    staker.save();
-  }
-
-  let stakeTo = new Stake(stakeId(event.address, event.params.to));
-  stakeTo.staker = event.params.to;
-  stakeTo.solution = event.address;
-  stakeTo.amount = event.params.newStake;
-  stakeTo.save();
 }
 
 function contributionId(solutionAddress: Bytes, userAddress: Bytes, positionIndex: BigInt): Bytes {
   const concatBytes = solutionAddress.concat(userAddress).concatI32(positionIndex.toI32());
-  return Bytes.fromByteArray(crypto.keccak256(concatBytes));
-}
-
-function stakeId(solutionAddress: Bytes, userAddress: Bytes): Bytes {
-  const concatBytes = solutionAddress.concat(userAddress);
   return Bytes.fromByteArray(crypto.keccak256(concatBytes));
 }

@@ -4,15 +4,15 @@ features:
 indexerHints:
   prune: auto
 schema:
-  file: ./schema.graphql
+  file: ./updraft-schemas/schema.graphql
 dataSources:
   - kind: ethereum
     name: Updraft
     network: arbitrum-sepolia
     source:
-      address: "0xc5B17C5D25752449Aa955a517E091Aa4c038245D"
       abi: Updraft
-      startBlock: 100408996
+      address: "0xB9eD909cA3c9070B6F6706d6b44396e33dA468a5"
+      startBlock: 157779564
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -21,6 +21,7 @@ dataSources:
         - Idea
         - User
         - Solution
+        - TagCount
       abis:
         - name: Updraft
           file: ./abis/Updraft.json
@@ -51,7 +52,8 @@ templates:
       eventHandlers:
         - event: Contributed(indexed address,uint256,uint256,uint256,uint256)
           handler: handleContributed
-        - event: PositionTransferred(indexed address,indexed address,uint256,uint256,uint256)
+        - event: PositionTransferred(indexed address,indexed
+            address,uint256,uint256,uint256)
           handler: handlePositionTransferred
         - event: Split(indexed address,uint256,uint256,uint256,uint256,uint256)
           handler: handleSplit
@@ -74,13 +76,12 @@ templates:
         - name: Solution
           file: ./abis/Solution.json
       eventHandlers:
-        - event: Contributed(indexed address,uint256,uint256,uint256,uint256)
+        - event: Contributed(indexed address,uint256,uint256,uint256,uint256,uint256)
           handler: handleContributed
-        - event: FeesCollected(indexed address,uint256,uint256)
-          handler: handleFeesCollected
         - event: GoalExtended(uint256,uint256)
           handler: handleGoalExtended
-        - event: PositionTransferred(indexed address,indexed address,uint256,uint256,uint256)
+        - event: PositionTransferred(indexed address,indexed
+            address,uint256,uint256,uint256)
           handler: handlePositionTransferred
         - event: Refunded(indexed address,uint256,uint256,uint256)
           handler: handleRefunded
@@ -90,6 +91,4 @@ templates:
           handler: handleSplit
         - event: StakeUpdated(indexed address,uint256,uint256)
           handler: handleStakeUpdated
-        - event: StakeTransferred(indexed address,indexed address,uint256,uint256)
-          handler: handleStakeTransferred
       file: ./src/solution.ts
