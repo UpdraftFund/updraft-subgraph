@@ -10,8 +10,8 @@ The `networks.json` file contains contract addresses and start blocks for differ
 - **arbitrum-one** (mainnet) - Used in the `main` branch
 
 Each network has two Updraft factory contracts:
-- `Updraft` - The original/old factory contract
-- `UpdraftNew` - The new factory contract with airdrop functionality
+- `UpdraftOld` - The original/old factory contract
+- `Updraft` - The current contract
 
 ## Building for Different Networks
 
@@ -49,10 +49,10 @@ yarn deploy:arbitrum
 2. **subgraph.yaml** - Uses placeholder values that get replaced during build
 3. **Build process** - The `graph build --network <name>` command reads from `networks.json` and updates the manifest
 
-When you run `graph build --network arbitrum-sepolia`, it:
-- Reads the `arbitrum-sepolia` section from `networks.json`
-- Updates the `network` field in `subgraph.yaml` to `arbitrum-sepolia`
-- Updates contract addresses and start blocks for `Updraft` and `UpdraftNew` data sources
+For example, when you run `graph build --network arbitrum-one`, it:
+- Reads the `arbitrum-one` section from `networks.json`
+- Updates the `network` field in `subgraph.yaml` to `arbitrum-one`
+- Updates contract addresses and start blocks for `UpdraftOld` and `Updraft` data sources
 
 ## Idea Contract Versioning
 
@@ -110,10 +110,6 @@ To add support for a new network:
     "Updraft": {
       "address": "0x...",
       "startBlock": 123456
-    },
-    "UpdraftNew": {
-      "address": "0x...",
-      "startBlock": 789012
     }
   }
 }
@@ -128,8 +124,6 @@ To add support for a new network:
   }
 }
 ```
-
-3. Update the old Updraft contract addresses in `src/updraft.ts` if needed
 
 ## Testing
 

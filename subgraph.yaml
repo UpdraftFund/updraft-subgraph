@@ -7,7 +7,7 @@ schema:
   file: ./updraft-schemas/schema.graphql
 dataSources:
   - kind: ethereum
-    name: Updraft
+    name: UpdraftOld
     network: arbitrum-sepolia
     source:
       abi: Updraft
@@ -35,7 +35,7 @@ dataSources:
           handler: handleSolutionCreated
       file: ./src/updraft.ts
   - kind: ethereum
-    name: UpdraftNew
+    name: Updraft
     network: arbitrum-sepolia
     source:
       abi: Updraft
