@@ -34,7 +34,60 @@ dataSources:
             address,address,uint256,uint256,uint256,uint256,bytes)
           handler: handleSolutionCreated
       file: ./src/updraft.ts
+  - kind: ethereum
+    name: UpdraftNew
+    network: arbitrum-sepolia
+    source:
+      abi: Updraft
+      address: "0xf548722c81f36b83690b60109427cc326eebb251"
+      startBlock: 206889580
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Idea
+        - User
+        - Solution
+        - TagCount
+      abis:
+        - name: Updraft
+          file: ./abis/Updraft.json
+      eventHandlers:
+        - event: IdeaCreated(indexed address,indexed address,uint256,uint256,bytes)
+          handler: handleIdeaCreated
+        - event: ProfileUpdated(indexed address,bytes)
+          handler: handleProfileUpdated
+        - event: SolutionCreated(indexed address,indexed address,indexed
+            address,address,uint256,uint256,uint256,uint256,bytes)
+          handler: handleSolutionCreated
+      file: ./src/updraft.ts
 templates:
+  - kind: ethereum
+    name: IdeaOld
+    network: arbitrum-sepolia
+    source:
+      abi: IdeaOld
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - IdeaContribution
+      abis:
+        - name: IdeaOld
+          file: ./abis/IdeaOld.json
+      eventHandlers:
+        - event: Contributed(indexed address,uint256,uint256,uint256,uint256)
+          handler: handleContributed
+        - event: PositionTransferred(indexed address,indexed
+            address,uint256,uint256,uint256)
+          handler: handlePositionTransferred
+        - event: Split(indexed address,uint256,uint256,uint256,uint256,uint256)
+          handler: handleSplit
+        - event: Withdrew(indexed address,uint256,uint256,uint256,uint256,uint256)
+          handler: handleWithdrew
+      file: ./src/ideaOld.ts
   - kind: ethereum
     name: Idea
     network: arbitrum-sepolia
@@ -50,7 +103,7 @@ templates:
         - name: Idea
           file: ./abis/Idea.json
       eventHandlers:
-        - event: Contributed(indexed address,uint256,uint256,uint256,uint256)
+        - event: Contributed(indexed address,uint256,uint256,uint256,uint256,indexed bool)
           handler: handleContributed
         - event: PositionTransferred(indexed address,indexed
             address,uint256,uint256,uint256)

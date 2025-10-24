@@ -1,7 +1,11 @@
-import { BigInt, Bytes, json, JSONValueKind, log } from "@graphprotocol/graph-ts"
+import { BigInt, Bytes, json, JSONValueKind, log, Address } from "@graphprotocol/graph-ts"
 import { IdeaCreated, ProfileUpdated, SolutionCreated} from "../generated/Updraft/Updraft"
 import { User, Idea, Solution, TagCount } from "../generated/schema"
-import { Idea as IdeaTemplate, Solution as SolutionTemplate } from '../generated/templates'
+import { Idea as IdeaTemplate, IdeaOld as IdeaOldTemplate, Solution as SolutionTemplate } from '../generated/templates'
+
+// Old Updraft contract addresses (use IdeaOld template for ideas created by these)
+const OLD_UPDRAFT_ARBITRUM_SEPOLIA = Address.fromString("0xB9eD909cA3c9070B6F6706d6b44396e33dA468a5");
+const OLD_UPDRAFT_ARBITRUM_ONE = Address.fromString("0x08e87242f23904e22da12a392b2facbb56c2959a");
 
 export function handleIdeaCreated(event: IdeaCreated): void {
   let idea = new Idea(event.params.idea);
@@ -63,7 +67,12 @@ export function handleIdeaCreated(event: IdeaCreated): void {
   idea.save();
 
   // Create a template instance to handle events from the new Idea contract
-  IdeaTemplate.create(event.params.idea);
+  // Use IdeaOld template for ideas created by old Updraft contracts
+  if (event.address.equals(OLD_UPDRAFT_ARBITRUM_SEPOLIA) || event.address.equals(OLD_UPDRAFT_ARBITRUM_ONE)) {
+    IdeaOldTemplate.create(event.params.idea);
+  } else {
+    IdeaTemplate.create(event.params.idea);
+  }
 }
 
 export function handleProfileUpdated(event: ProfileUpdated): void {

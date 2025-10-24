@@ -21,11 +21,15 @@ describe("Describe entity assertions", () => {
     let positionIndex = BigInt.fromI32(234)
     let amount = BigInt.fromI32(234)
     let totalShares = BigInt.fromI32(234)
+    let totalTokens = BigInt.fromI32(234)
+    let isAirdrop = false
     let newContributedEvent = createContributedEvent(
       addr,
       positionIndex,
       amount,
-      totalShares
+      totalShares,
+      totalTokens,
+      isAirdrop
     )
     handleContributed(newContributedEvent)
   })

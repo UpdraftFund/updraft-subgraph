@@ -11,7 +11,9 @@ export function createContributedEvent(
   addr: Address,
   positionIndex: BigInt,
   amount: BigInt,
-  totalShares: BigInt
+  totalShares: BigInt,
+  totalTokens: BigInt,
+  isAirdrop: boolean
 ): Contributed {
   let contributedEvent = changetype<Contributed>(newMockEvent())
 
@@ -34,6 +36,15 @@ export function createContributedEvent(
       "totalShares",
       ethereum.Value.fromUnsignedBigInt(totalShares)
     )
+  )
+  contributedEvent.parameters.push(
+    new ethereum.EventParam(
+      "totalTokens",
+      ethereum.Value.fromUnsignedBigInt(totalTokens)
+    )
+  )
+  contributedEvent.parameters.push(
+    new ethereum.EventParam("isAirdrop", ethereum.Value.fromBoolean(isAirdrop))
   )
 
   return contributedEvent
