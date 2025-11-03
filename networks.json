@@ -1,14 +1,22 @@
 {
   "arbitrum-sepolia": {
-    "Updraft": {
+    "UpdraftOld": {
       "address": "0xB9eD909cA3c9070B6F6706d6b44396e33dA468a5",
       "startBlock": 157779564
+    },
+    "Updraft": {
+      "address": "0xf548722c81f36b83690b60109427cc326eebb251",
+      "startBlock": 206889580
     }
   },
   "arbitrum-one": {
-    "Updraft": {
+    "UpdraftOld": {
       "address": "0x08e87242f23904e22da12a392b2facbb56c2959a",
       "startBlock": 345598886
+    },
+    "Updraft": {
+      "address": "0x09dcf63245cbd0bff3adb3c2ef751d7d0e6b9a0a",
+      "startBlock": 391824530
     }
   }
 }

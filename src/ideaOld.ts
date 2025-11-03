@@ -1,5 +1,5 @@
 import { store, crypto, BigInt, Bytes } from '@graphprotocol/graph-ts'
-import { Contributed, PositionTransferred, Split, Withdrew } from "../generated/templates/Idea/Idea"
+import { Contributed, PositionTransferred, Split, Withdrew } from "../generated/templates/IdeaOld/IdeaOld"
 import { Idea, User, IdeaContribution } from "../generated/schema"
 
 export function handleContributed(event: Contributed): void {
@@ -20,7 +20,7 @@ export function handleContributed(event: Contributed): void {
   contribution.positionIndex = event.params.positionIndex;
   contribution.contribution = event.params.amount;
   contribution.createdTime = event.block.timestamp;
-  contribution.isAirdrop = event.params.isAirdrop;
+  contribution.isAirdrop = false; // Old contracts don't have airdrop functionality
   contribution.save();
 }
 
