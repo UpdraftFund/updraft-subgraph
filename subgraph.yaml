@@ -10,7 +10,7 @@ dataSources:
     name: UpdraftOld
     network: arbitrum-sepolia
     source:
-      abi: Updraft
+      abi: UpdraftOld
       address: "0xB9eD909cA3c9070B6F6706d6b44396e33dA468a5"
       startBlock: 157779564
     mapping:
@@ -23,7 +23,7 @@ dataSources:
         - Solution
         - TagCount
       abis:
-        - name: Updraft
+        - name: UpdraftOld
           file: ./abis/UpdraftOld.json
       eventHandlers:
         - event: IdeaCreated(indexed address,indexed address,uint256,uint256,bytes)
