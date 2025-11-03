@@ -1,5 +1,5 @@
 import { store, crypto, BigInt, Bytes, log } from '@graphprotocol/graph-ts'
-import { Solution, User, SolutionContribution } from "../generated/schema"
+import { Solution, User, SolutionContribution, DependencyContribution } from "../generated/schema"
 import {
   Contributed,
   GoalExtended,
@@ -22,8 +22,8 @@ export function handleContributed(event: Contributed): void {
     funder.save();
   }
 
-  let contribution = new SolutionContribution(
-    contributionId(event.address, event.params.addr, event.params.positionIndex));
+  let id = contributionId(event.address, event.params.addr, event.params.positionIndex);
+  let contribution = new SolutionContribution(id);
   contribution.solution = event.address;
   contribution.funder = event.params.addr;
   contribution.positionIndex = event.params.positionIndex;
@@ -31,6 +31,35 @@ export function handleContributed(event: Contributed): void {
   contribution.refunded = false;
   contribution.createdTime = event.block.timestamp;
   contribution.save();
+
+  let dependencyAddresses = event.params.dependencyAddresses;
+  let dependencyChainIds = event.params.dependencyChainIds;
+  let dependencyAmounts = event.params.dependencyAmounts;
+  let dependencyCount = dependencyAddresses.length;
+
+  for (let i = 0; i < dependencyCount; ++i) {
+    let depAddress = dependencyAddresses[i];
+    let depChainId = dependencyChainIds[i];
+    let depAmount = dependencyAmounts[i];
+    let dependency = new DependencyContribution(dependencyId(
+      contribution.id,
+      depChainId,
+      depAddress
+    ));
+
+    dependency.primaryContribution = contribution.id;
+    dependency.dependencyChainId = depChainId;
+    dependency.dependencyAddress = depAddress;
+    dependency.dependencyAmount = depAmount;
+
+    if (event.params.amount.gt(BigInt.fromI32(0))) {
+      dependency.ratioToPrimary = depAmount.toBigDecimal().div(event.params.amount.toBigDecimal());
+    } else {
+      dependency.ratioToPrimary = BigInt.fromI32(0).toBigDecimal();
+    }
+
+    dependency.save();
+  }
 }
 
 export function handleGoalExtended(event: GoalExtended): void {
@@ -113,5 +142,10 @@ export function handleStakeUpdated(event: StakeUpdated): void {
 
 function contributionId(solutionAddress: Bytes, userAddress: Bytes, positionIndex: BigInt): Bytes {
   const concatBytes = solutionAddress.concat(userAddress).concatI32(positionIndex.toI32());
+  return Bytes.fromByteArray(crypto.keccak256(concatBytes));
+}
+
+function dependencyId(primaryContributionId: Bytes, dependencyChainId: BigInt, dependencyAddress: Bytes): Bytes {
+  const concatBytes = primaryContributionId.concatI32(dependencyChainId.toI32()).concat(dependencyAddress);
   return Bytes.fromByteArray(crypto.keccak256(concatBytes));
 }
