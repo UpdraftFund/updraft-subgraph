@@ -24,7 +24,7 @@ dataSources:
         - TagCount
       abis:
         - name: Updraft
-          file: ./abis/Updraft.json
+          file: ./abis/UpdraftOld.json
       eventHandlers:
         - event: IdeaCreated(indexed address,indexed address,uint256,uint256,bytes)
           handler: handleIdeaCreated
@@ -33,14 +33,14 @@ dataSources:
         - event: SolutionCreated(indexed address,indexed address,indexed
             address,address,uint256,uint256,uint256,uint256,bytes)
           handler: handleSolutionCreated
-      file: ./src/updraft.ts
+      file: ./src/updraftOld.ts
   - kind: ethereum
     name: Updraft
     network: arbitrum-sepolia
     source:
       abi: Updraft
-      address: "0xf548722c81f36b83690b60109427cc326eebb251"
-      startBlock: 206889580
+      address: "0x307c524da3418bbdfb4331502ce2103cdcc36461"
+      startBlock: 211317276
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -59,7 +59,7 @@ dataSources:
         - event: ProfileUpdated(indexed address,bytes)
           handler: handleProfileUpdated
         - event: SolutionCreated(indexed address,indexed address,indexed
-            address,address,uint256,uint256,uint256,uint256,bytes)
+            address,address,address,uint256,uint256,uint256,uint256,bytes)
           handler: handleSolutionCreated
       file: ./src/updraft.ts
 templates:
@@ -114,10 +114,10 @@ templates:
           handler: handleWithdrew
       file: ./src/idea.ts
   - kind: ethereum
-    name: Solution
+    name: SolutionOld
     network: arbitrum-sepolia
     source:
-      abi: Solution
+      abi: SolutionOld
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -130,6 +130,39 @@ templates:
           file: ./abis/Solution.json
       eventHandlers:
         - event: Contributed(indexed address,uint256,uint256,uint256,uint256,uint256)
+          handler: handleContributed
+        - event: GoalExtended(uint256,uint256)
+          handler: handleGoalExtended
+        - event: PositionTransferred(indexed address,indexed
+            address,uint256,uint256,uint256)
+          handler: handlePositionTransferred
+        - event: Refunded(indexed address,uint256,uint256,uint256)
+          handler: handleRefunded
+        - event: SolutionUpdated(bytes)
+          handler: handleSolutionUpdated
+        - event: Split(indexed address,uint256,uint256,uint256,uint256,uint256)
+          handler: handleSplit
+        - event: StakeUpdated(indexed address,uint256,uint256)
+          handler: handleStakeUpdated
+      file: ./src/solutionOld.ts
+  - kind: ethereum
+    name: Solution
+    network: arbitrum-sepolia
+    source:
+      abi: Solution
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - SolutionContribution
+        - DependencyContribution
+        - Stake
+      abis:
+        - name: Solution
+          file: ./abis/Solution.json
+      eventHandlers:
+        - event: Contributed(indexed address,uint256,uint256,uint256,uint256,uint256,address[],uint256[],uint256[],uint256[])
           handler: handleContributed
         - event: GoalExtended(uint256,uint256)
           handler: handleGoalExtended
