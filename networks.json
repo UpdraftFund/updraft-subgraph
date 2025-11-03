@@ -5,8 +5,8 @@
       "startBlock": 157779564
     },
     "Updraft": {
-      "address": "0xf548722c81f36b83690b60109427cc326eebb251",
-      "startBlock": 206889580
+      "address": "0x307c524da3418bbdfb4331502ce2103cdcc36461",
+      "startBlock": 211317276
     }
   },
   "arbitrum-one": {
@@ -15,8 +15,8 @@
       "startBlock": 345598886
     },
     "Updraft": {
-      "address": "0x09dcf63245cbd0bff3adb3c2ef751d7d0e6b9a0a",
-      "startBlock": 391824530
+      "address": "0x6c9d8bcb39048c648bc21e20ed59e3581508da7d",
+      "startBlock": 396300071
     }
   }
 }
