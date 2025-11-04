@@ -162,7 +162,8 @@ templates:
         - name: Solution
           file: ./abis/Solution.json
       eventHandlers:
-        - event: Contributed(indexed address,uint256,uint256,uint256,uint256,uint256,address[],uint256[],uint256[])
+        - event: Contributed(indexed
+            address,uint256,uint256,uint256,uint256,uint256,address[],uint256[],uint256[])
           handler: handleContributed
         - event: GoalExtended(uint256,uint256)
           handler: handleGoalExtended
