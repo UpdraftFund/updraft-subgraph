@@ -1,5 +1,5 @@
 import { BigInt, Bytes, json, JSONValueKind, log, Address } from "@graphprotocol/graph-ts"
-import { IdeaCreated, ProfileUpdated, SolutionCreated} from "../generated/Updraft/Updraft"
+import { IdeaCreated, ProfileUpdated, SolutionCreated} from "../generated/UpdraftOld/UpdraftOld"
 import { User, Idea, Solution, TagCount } from "../generated/schema"
 import { IdeaOld as IdeaTemplate, SolutionOld as SolutionTemplate } from '../generated/templates'
 
